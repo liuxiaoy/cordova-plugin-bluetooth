@@ -2,15 +2,15 @@
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest"
-	id="cordova-plugin-ble"
-	version="2.0.1">
+	id="cordova-plugin-bluetooth"
+	version="2.0.2">
 
 	<engines>
 		<engine name="cordova" version=">=6.0.0" />
 	</engines>
 
 	<name>Evothings BLE API</name>
-	<description>Bluetooth Low Energy Cordova plugin</description>
+	<description>Bluetooth Cordova plugin</description>
 	<author>Evothings</author>
 	<keywords>bluetooth,ble,bluetooth low energy,bluetooth smart</keywords>
 	<license>Apache 2.0</license>
