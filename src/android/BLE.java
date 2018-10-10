@@ -1047,6 +1047,13 @@ public class BLE
 	{
 		final GattHandler gh = mConnectedDevices.get(args.getInt(0));
 
+        if (Build.VERSION.SDK_INT >= 21) {
+            if (!gh.mGatt.requestMtu(512)) {
+                callbackContext.error("requestMtu failed");
+                return;
+            }
+        }
+
 		// Get characteristic.
 		BluetoothGattCharacteristic characteristic = gh.mCharacteristics.get(args.getInt(1));
 
@@ -1573,6 +1580,12 @@ public class BLE
 		{
 			CallbackContext cc = mNotifications.get(c);
 			keepCallback(cc, c.getValue());
+		}
+
+		@Override
+		public void onMtuChanged(BluetoothGatt gatt, int mtu, int status)
+		{
+			System.out.println("onMtuChanged("+mtu+")"+status);
 		}
 	}
 
