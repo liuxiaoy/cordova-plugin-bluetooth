@@ -1047,13 +1047,6 @@ public class BLE
 	{
 		final GattHandler gh = mConnectedDevices.get(args.getInt(0));
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            if (!gh.mGatt.requestMtu(512)) {
-                callbackContext.error("requestMtu failed");
-                return;
-            }
-        }
-
 		// Get characteristic.
 		BluetoothGattCharacteristic characteristic = gh.mCharacteristics.get(args.getInt(1));
 
@@ -1559,7 +1552,7 @@ public class BLE
 			mCurrentOpContext = null;
 			process();
 		}
-
+        private boolean first = true;
 		@Override
 		public void onDescriptorWrite(BluetoothGatt g, BluetoothGattDescriptor d, int status)
 		{
@@ -1570,6 +1563,15 @@ public class BLE
 					mCurrentOpContext.error(status);
 				}
 			}
+			if (first) {
+                first = false;
+                if (Build.VERSION.SDK_INT >= 21) {
+                    if (!g.requestMtu(512)) {
+                        System.err.println("requestMtu failed");
+                        return;
+                    }
+                }
+            }
 			mDontReportWriteDescriptor = false;
 			mCurrentOpContext = null;
 			process();
