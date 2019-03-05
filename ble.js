@@ -945,6 +945,25 @@ function objectHandle(objectOrHandle)
 }
 
 /**
+ * set a remote device's mtu.
+ * @param {DeviceInfo} device - Device object or a device handle from {@link connectCallback}.
+ * @param {number} mtu - A new mtu value you want.
+ * @param {mtuCallback} success - Called with the new mtu.
+ * @param {failCallback} fail
+ * @example
+ *     evothings.ble.requestMtu(
+ *       device,
+ *       512,
+ *       function(mtu){console.log('the mtu has been set to ' + mtu);},
+ *       function(){ console.log('the mtu set fail'); }
+ *     );
+ */
+exports.requestMtu = function(deviceOrHandle, mtu, success, fail)
+{
+    exec(success, fail, 'BLE', 'requestMtu', [objectHandle(deviceOrHandle), mtu]);
+};
+
+/**
  * Close the connection to a remote device.
  * <p>Frees any native resources associated with the device.</p>
  * <p>Does not cause any callbacks to the function passed to evothings.ble.connect().
