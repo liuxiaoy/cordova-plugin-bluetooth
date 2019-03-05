@@ -99,7 +99,7 @@ exports.startScan = function(arg1, arg2, arg3, arg4)
 		fail = arg3;
 		options = arg4;
 	}
-	else if ('function' == typeof arg1)
+	else if ('function' === typeof arg1)
 	{
 		// First param is a function.
 		serviceUUIDs = null;
@@ -288,7 +288,7 @@ exports.parseAdvertisementData = function(device)
 	while (pos < byteArray.length)
 	{
 		var length = byteArray[pos++];
-		if (length == 0)
+		if (length === 0)
 		{
 			break;
 		}
@@ -308,7 +308,7 @@ exports.parseAdvertisementData = function(device)
 			var UUID_format = [4, 2, 2, 2, 6];
 			for (var l=0; l<UUID_format.length; l++)
 			{
-				if (l != 0)
+				if (l !== 0)
 				{
 					string += '-';
 				}
@@ -320,7 +320,7 @@ exports.parseAdvertisementData = function(device)
 			return string;
 		}
 
-		if (type == 0x02 || type == 0x03) // 16-bit Service Class UUIDs.
+		if (type === 0x02 || type === 0x03) // 16-bit Service Class UUIDs.
 		{
 			serviceUUIDs = serviceUUIDs ? serviceUUIDs : [];
 			for(var i=0; i<length; i+=2)
@@ -333,7 +333,7 @@ exports.parseAdvertisementData = function(device)
 					BLUETOOTH_BASE_UUID);
 			}
 		}
-		if (type == 0x04 || type == 0x05) // 32-bit Service Class UUIDs.
+		if (type === 0x04 || type === 0x05) // 32-bit Service Class UUIDs.
 		{
 			serviceUUIDs = serviceUUIDs ? serviceUUIDs : [];
 			for (var i=0; i<length; i+=4)
@@ -345,7 +345,7 @@ exports.parseAdvertisementData = function(device)
 					BLUETOOTH_BASE_UUID);
 			}
 		}
-		if (type == 0x06 || type == 0x07) // 128-bit Service Class UUIDs.
+		if (type === 0x06 || type === 0x07) // 128-bit Service Class UUIDs.
 		{
 			serviceUUIDs = serviceUUIDs ? serviceUUIDs : [];
 			for (var i=0; i<length; i+=16)
@@ -353,17 +353,17 @@ exports.parseAdvertisementData = function(device)
 				serviceUUIDs.push(arrayToUUID(byteArray, pos + i));
 			}
 		}
-		if (type == 0x08 || type == 0x09) // Local Name.
+		if (type === 0x08 || type === 0x09) // Local Name.
 		{
 			advertisementData.kCBAdvDataLocalName = evothings.ble.fromUtf8(
 				new Uint8Array(byteArray.buffer, pos, length));
 		}
-		if (type == 0x0a) // TX Power Level.
+		if (type === 0x0a) // TX Power Level.
 		{
 			advertisementData.kCBAdvDataTxPowerLevel =
 				littleEndianToInt8(byteArray, pos);
 		}
-		if (type == 0x16) // Service Data, 16-bit UUID.
+		if (type === 0x16) // Service Data, 16-bit UUID.
 		{
 			serviceData = serviceData ? serviceData : {};
 			var uuid =
@@ -375,7 +375,7 @@ exports.parseAdvertisementData = function(device)
 			var data = new Uint8Array(byteArray.buffer, pos+2, length-2);
 			serviceData[uuid] = base64.fromArrayBuffer(data);
 		}
-		if (type == 0x20) // Service Data, 32-bit UUID.
+		if (type === 0x20) // Service Data, 32-bit UUID.
 		{
 			serviceData = serviceData ? serviceData : {};
 			var uuid =
@@ -386,14 +386,14 @@ exports.parseAdvertisementData = function(device)
 			var data = new Uint8Array(byteArray.buffer, pos+4, length-4);
 			serviceData[uuid] = base64.fromArrayBuffer(data);
 		}
-		if (type == 0x21) // Service Data, 128-bit UUID.
+		if (type === 0x21) // Service Data, 128-bit UUID.
 		{
 			serviceData = serviceData ? serviceData : {};
 			var uuid = arrayToUUID(byteArray, pos);
 			var data = new Uint8Array(byteArray.buffer, pos+16, length-16);
 			serviceData[uuid] = base64.fromArrayBuffer(data);
 		}
-		if (type == 0xff) // Manufacturer-specific Data.
+		if (type === 0xff) // Manufacturer-specific Data.
 		{
 			// Annoying to have to transform base64 back and forth,
 			// but it has to be done in order to maintain the API.
@@ -521,8 +521,8 @@ function littleEndianToUint32(data, offset)
  */
 function littleEndianToInt8(data, offset)
 {
-	var x = littleEndianToUint8(data, offset)
-	if (x & 0x80) x = x - 256
+	var x = littleEndianToUint8(data, offset);
+	if (x & 0x80) x = x - 256;
 	return x
 }
 
@@ -578,7 +578,7 @@ function littleEndianToUint8(data, offset)
 exports.getBondedDevices = function(success, fail, options)
 {
 	exec(success, fail, 'BLE', 'getBondedDevices', [options.serviceUUIDs]);
-}
+};
 
 /**
  * Success callback function for getBondState.
@@ -641,7 +641,7 @@ exports.getBondState = function(device, success, fail, options)
 				for (var i in devices)
 				{
 					var d = devices[i];
-					if (d.address == device.address)
+					if (d.address === device.address)
 					{
 						success("bonded");
 						return; // bonded device found
@@ -657,7 +657,7 @@ exports.getBondState = function(device, success, fail, options)
 			{ serviceUUIDs: [serviceUUID] }
 		);
 	}
-}
+};
 
 /**
  * Success callback function for bond. On iOS the bond state returned
@@ -696,7 +696,7 @@ exports.getBondState = function(device, success, fail, options)
 exports.bond = function(device, success, fail)
 {
 	exec(success, fail, 'BLE', 'bond', [device.address]);
-}
+};
 
 /**
  * Success callback function for unbond. On iOS the bond state returned
@@ -734,7 +734,7 @@ exports.bond = function(device, success, fail)
 exports.unbond = function(device, success, fail)
 {
 	exec(success, fail, 'BLE', 'unbond', [device.address]);
-}
+};
 
 /**
  * Connect to a remote device. It is recommended that you use the high-level
@@ -762,13 +762,13 @@ exports.unbond = function(device, success, fail)
  */
 exports.connect = function(deviceOrAddress, success, fail)
 {
-	if (typeof deviceOrAddress == 'string')
+	if (typeof deviceOrAddress === 'string')
 	{
 		var address = deviceOrAddress;
 		exec(success, fail, 'BLE', 'connect', [address]);
 	}
 	else
-	if (typeof deviceOrAddress == 'object')
+	if (typeof deviceOrAddress === 'object')
 	{
 		var device = deviceOrAddress;
 		function onSuccess(connectInfo)
@@ -864,7 +864,7 @@ exports.connectToDevice = function(device, connected, disconnected, fail, option
 	var serviceUUIDs = null;
 
 	// Set options.
-	if (options && (typeof options == 'object'))
+	if (options && (typeof options === 'object'))
 	{
 		if (options.discoverServices === false)
 		{
@@ -879,7 +879,7 @@ exports.connectToDevice = function(device, connected, disconnected, fail, option
 
 	function onConnectEvent(connectInfo)
 	{
-		if (connectInfo.state == evothings.ble.connectionState.STATE_CONNECTED)
+		if (connectInfo.state === evothings.ble.connectionState.STATE_CONNECTED)
 		{
 			device.handle = connectInfo.deviceHandle;
 			if (discoverServices)
@@ -903,7 +903,7 @@ exports.connectToDevice = function(device, connected, disconnected, fail, option
 				connected(device);
 			}
 		}
-		else if (connectInfo.state == evothings.ble.connectionState.STATE_DISCONNECTED)
+		else if (connectInfo.state === evothings.ble.connectionState.STATE_DISCONNECTED)
 		{
 			// Call disconnected callback.
 			disconnected(device);
@@ -932,7 +932,7 @@ exports.connectToDevice = function(device, connected, disconnected, fail, option
  */
 function objectHandle(objectOrHandle)
 {
-	if ((typeof objectOrHandle == 'object') && objectOrHandle.handle)
+	if ((typeof objectOrHandle === 'object') && objectOrHandle.handle)
 	{
 		// It's an object, return the handle.
 		return objectOrHandle.handle;
@@ -1592,7 +1592,7 @@ exports.getCanonicalUUID = function(uuid)
 exports.readAllServiceData = function(deviceOrHandle, success, fail)
 {
 	exports.readServiceData(deviceOrHandle, success, fail);
-}
+};
 
 /**
  * Options for readServiceData.
@@ -1722,11 +1722,11 @@ exports.readServiceData = function(deviceOrHandle, success, fail, options)
 				descriptor.uuid = exports.getCanonicalUUID(descriptor.uuid);
 				characteristic.descriptors.push(descriptor);
 			}
-			if (0 == readCounter)
+			if (0 === readCounter)
 			{
 				// Everything is read. If a device object is supplied,
 				// set the services array of the device to the result.
-				if (typeof deviceOrHandle == 'object')
+				if (typeof deviceOrHandle === 'object')
 				{
 					deviceOrHandle.services = serviceArray;
 				}
@@ -1779,7 +1779,7 @@ exports.getService = function(deviceOrServices, uuid)
 	for (var i in services)
 	{
 		var service = services[i];
-		if (service.uuid == uuid)
+		if (service.uuid === uuid)
 		{
 			return service;
 		}
@@ -1795,7 +1795,7 @@ exports.getService = function(deviceOrServices, uuid)
  * array of the service. This function will return the first
  * characteristic found, which may not be the one you want.
  * Note that this is a rare case.)
- * @param {Service} device - Service object.
+ * @param {Service} service - Service object.
  * @param {string} uuid - UUID of characteristic to get.
  */
 exports.getCharacteristic = function(service, uuid)
@@ -1806,7 +1806,7 @@ exports.getCharacteristic = function(service, uuid)
 	for (var i in characteristics)
 	{
 		var characteristic = characteristics[i];
-		if (characteristic.uuid == uuid)
+		if (characteristic.uuid === uuid)
 		{
 			return characteristic;
 		}
@@ -1828,7 +1828,7 @@ exports.getDescriptor = function(characteristic, uuid)
 	for (var i in descriptors)
 	{
 		var descriptor = descriptors[i];
-		if (descriptor.uuid == uuid)
+		if (descriptor.uuid === uuid)
 		{
 			return descriptor;
 		}
@@ -1868,7 +1868,7 @@ exports.os.isAndroid = function()
  * BLE Peripheral API. Experimental, supported only on Android.
  * @namespace
  */
-exports.peripheral = {}
+exports.peripheral = {};
 
 // Internal. Returns a function that will handle GATT server callbacks.
 function gattServerCallbackHandler(winFunc, settings) {
@@ -2025,7 +2025,7 @@ exports.peripheral.stopGattServer = function(win, fail) {
 */
 exports.peripheral.sendResponse = function(deviceHandle, requestId, data, win, fail) {
 	exec(win, fail, 'BLE', 'sendResponse', [deviceHandle, requestId, data.buffer]);
-}
+};
 
 /** Sends a notification to a remote device that a characteristic's value has been updated.
 * @param {int} deviceHandle - From a connectionStateChangeCallback.
@@ -2054,7 +2054,7 @@ exports.closeClient = function(clientHandle, win, fail) {
 */
 exports.peripheral.startAdvertise = function(settings, win, fail) {
 	exec(win, fail, 'BLE', 'startAdvertise', [settings]);
-}
+};
 
 /** Stops BLE advertise.
 *
@@ -2063,7 +2063,7 @@ exports.peripheral.startAdvertise = function(settings, win, fail) {
 */
 exports.peripheral.stopAdvertise = function(win, fail) {
 	exec(win, fail, 'BLE', 'stopAdvertise', []);
-}
+};
 
 // AdvertiseSettings
 /** Describes a BLE advertisement.
