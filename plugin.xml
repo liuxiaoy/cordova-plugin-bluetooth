@@ -4,16 +4,16 @@
 	xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest"
 	id="cordova-plugin-bluetooth"
 	version="2.0.4">
-
-	<engines>
-		<engine name="cordova" version=">=6.0.0" />
-	</engines>
-
 	<name>Evothings BLE API</name>
+
 	<description>Bluetooth Cordova plugin</description>
 	<author>Evothings</author>
 	<keywords>bluetooth,ble,bluetooth low energy,bluetooth smart</keywords>
 	<license>Apache 2.0</license>
+
+	<engines>
+		<engine name="cordova" version=">=6.0.0" />
+	</engines>
 
 	<js-module src="ble.js" name="BLE">
 		<clobbers target="evothings.ble" />

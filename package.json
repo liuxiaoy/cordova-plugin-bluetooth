@@ -14,24 +14,24 @@
     "url": "git+https://github.com/liuxiaoy/cordova-plugin-bluetooth.git"
   },
   "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
     "bluetooth",
     "ble",
     "bluetooth low energy",
-    "bluetooth smart",
-    "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios"
-  ],
-  "engines": [
-    {
-      "name": "cordova",
-      "version": ">=6.0.0"
-    }
+    "bluetooth smart"
   ],
   "author": "Evothings",
   "license": "Apache 2.0",
   "bugs": {
     "url": "https://github.com/liuxiaoy/cordova-plugin-bluetooth/issues"
   },
-  "homepage": "https://github.com/liuxiaoy/cordova-plugin-bluetooth#readme"
+  "homepage": "https://github.com/liuxiaoy/cordova-plugin-bluetooth#readme",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=6.0.0"
+    }
+  ]
 }
