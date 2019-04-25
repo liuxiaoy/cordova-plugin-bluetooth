@@ -960,7 +960,15 @@ function objectHandle(objectOrHandle)
  */
 exports.requestMtu = function(deviceOrHandle, mtu, success, fail)
 {
-    exec(success, fail, 'BLE', 'requestMtu', [objectHandle(deviceOrHandle), mtu]);
+	if (exports.os.isAndroid())
+	{
+		// Mtu functions are only supported on Android.  (iOS sets MTU automatically to at most 185)
+		exec(success, fail, 'BLE', 'requestMtu', [objectHandle(deviceOrHandle), mtu]);
+	}
+	else
+	{
+		fail();
+	}
 };
 
 /**
