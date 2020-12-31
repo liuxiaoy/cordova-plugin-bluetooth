@@ -162,6 +162,9 @@ public class BLE
 			else if ("close".equals(action)) {
 				close(args, callbackContext);
 			}
+			else if ("requestMtu".equals(action)) {
+				requestMtu(args, callbackContext);
+			}
 			else if ("rssi".equals(action)) {
 				rssi(args, callbackContext);
 			}
@@ -805,6 +808,38 @@ public class BLE
 			GattHandler gh = mConnectedDevices.get(args.getInt(0));
 			gh.mGatt.close();
 			mConnectedDevices.remove(args.getInt(0));
+		} catch(JSONException e) {
+			e.printStackTrace();
+			callbackContext.error(e.toString());
+		}
+	}
+
+	// API implementation.
+	private void requestMtu(final CordovaArgs args, final CallbackContext callbackContext)
+	{
+		try {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+				callbackContext.error("no support to set mtu before Android L");
+				return;
+			}
+			final GattHandler gh = mConnectedDevices.get(args.getInt(0));
+			final int mtuValue = args.getInt(1);
+			gh.mOperations.add(new Runnable() {
+				@Override
+				public void run() {
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+						return;
+					}
+					gh.mCurrentOpContext = callbackContext;
+					boolean result = gh.mGatt.requestMtu(mtuValue);
+					if (!result) {
+						callbackContext.error("requestMtu fail");
+						gh.mCurrentOpContext = null;
+						gh.process();
+					}
+				}
+			});
+			gh.process();
 		} catch(JSONException e) {
 			e.printStackTrace();
 			callbackContext.error(e.toString());
@@ -1552,7 +1587,7 @@ public class BLE
 			mCurrentOpContext = null;
 			process();
 		}
-        private boolean first = true;
+
 		@Override
 		public void onDescriptorWrite(BluetoothGatt g, BluetoothGattDescriptor d, int status)
 		{
@@ -1563,15 +1598,6 @@ public class BLE
 					mCurrentOpContext.error(status);
 				}
 			}
-			if (first) {
-                first = false;
-                if (Build.VERSION.SDK_INT >= 21) {
-                    if (!g.requestMtu(512)) {
-                        System.err.println("requestMtu failed");
-                        return;
-                    }
-                }
-            }
 			mDontReportWriteDescriptor = false;
 			mCurrentOpContext = null;
 			process();
@@ -1588,6 +1614,13 @@ public class BLE
 		public void onMtuChanged(BluetoothGatt gatt, int mtu, int status)
 		{
 			System.out.println("onMtuChanged("+mtu+")"+status);
+			if (status == BluetoothGatt.GATT_SUCCESS) {
+				mCurrentOpContext.success(mtu);
+			} else {
+				mCurrentOpContext.error(status);
+			}
+			mCurrentOpContext = null;
+			process();
 		}
 	}
 
